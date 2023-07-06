@@ -15,13 +15,30 @@ if __name__ == "__main__":
                  0.751,0.803,-0.265,-0.341,0.111,-0.113,0.547,0.791,0.551,0.347,0.975,0.943,-0.249,-0.769,-0.625,-0.861,
                  -0.749,-0.945,-0.493,0.163,-0.469,0.0669,0.891,0.623,-0.609,-0.677,-0.721,-0.745,-0.885,-0.897,-0.969,
                  -0.949,0.707,0.783,0.859,0.979,0.811,0.891,-0.137]]).reshape(-1,3)
-
-    plane_eq = regressor.fit(points)
-    print(plane_eq)
+    plane_eq, inlyingPts = regressor.fit(points)
+    # print(inlyingPts)
+    # print(plane_eq)
     if plane_eq is None:
         sys.exit()
 
     import matplotlib.pyplot as plt
 
-    fig = plt.figure
-    fig.
+    x = np.linspace(-1,1,10)
+    y = np.linspace(-1,1,10)
+
+    X,Y = np.meshgrid(x,y)
+    Z = (plane_eq[0]*X+plane_eq[1]*Y+plane_eq[3])/plane_eq[2]
+
+    plt.style.use("classic")
+    fig, ax = plt.subplots(1,1)
+    ax.set_box_aspect(1)
+    # fig = plt.figure()
+    ax = plt.axes(projection = '3d')
+
+    ax.scatter3D(inlyingPts[:,0],inlyingPts[:,1],inlyingPts[:,2],cmap='Greens')
+    surf = ax.plot_surface(X,Y,Z)
+    # plt.scatter(X,y)
+    #
+    line = np.linspace(-1,1,num = 100).reshape(-1,1)
+    # plt.plot(line, regressor.predict(line), c="peru")
+    plt.show()
